@@ -14,7 +14,7 @@ apk del --purge build
 # install go-cron
 #
 apk add curl
-curl -SL https://github.com/odise/go-cron/releases/download/v0.0.7/go-cron-linux.gz | zcat > /usr/local/bin/go-cron
+curl -SL https://github.com/odise/go-cron/releases/download/v0.0.6/go-cron-linux.gz | zcat > /usr/local/bin/go-cron
 chmod u+x /usr/local/bin/go-cron
 
 # cleanup
