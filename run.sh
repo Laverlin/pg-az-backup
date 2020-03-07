@@ -1,6 +1,6 @@
 #! /bin/sh
 
-set -e
+set -euo pipefail
 
 if [ "${SCHEDULE}" = "**None**" ]; then
     echo "run backup"

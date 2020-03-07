@@ -1,34 +1,23 @@
 #! /bin/sh
 
-set -eo pipefail
+# The script sholud immediately fail, explicitly and loudly.
+#
+set -euo pipefail
 
-if [ "${AZURE_TENANT_ID}" = "**None**" ]; then
-  echo "You need to set the AZURE_TENANT_ID environment variable."
-  exit 1
-fi
-
-if [ "${AZURE_APP_ID}" = "**None**" ]; then
-  echo "You need to set the AZURE_APP_ID environment variable."
-  exit 1
-fi
-
-if [ "${AZURE_SECRET_ID}" = "**None**" ]; then
-  echo "You need to set the AZURE_SECRET_ID environment variable."
-  exit 1
-fi
-
+# check all environment varibles are set
+#
 if [ "${AZURE_STORAGE_ACCOUNT}" = "**None**" ]; then
   echo "You need to set the AZURE_STORAGE_ACCOUNT environment variable."
   exit 1
 fi
 
-if [ "${AZURE_STORAGE_CONTAINER}" = "**None**" ]; then
-  echo "You need to set the AZURE_STORAGE_CONTAINER environment variable."
+if [ "${AZURE_STORAGE_KEY}" = "**None**" ]; then
+  echo "You need to set the AZURE_STORAGE_KEY environment variable."
   exit 1
 fi
 
-if [ "${AZURE_STORAGE_ACCESS_KEY}" = "**None**" ]; then
-  echo "You need to set the $AZURE_STORAGE_ACCESS_KEY environment variable."
+if [ "${AZURE_CONTAINER_NAME}" = "**None**" ]; then
+  echo "You need to set the AZURE_CONTAINER_NAME environment variable."
   exit 1
 fi
 
@@ -57,9 +46,10 @@ if [ "${POSTGRES_PASSWORD}" = "**None**" ]; then
   exit 1
 fi
 
-# export ENV vars for azstorage container
+# export vars for child processes
+#
 export AZURE_STORAGE_ACCOUNT="$AZURE_STORAGE_ACCOUNT"
-export AZURE_STORAGE_ACCESS_KEY="$AZURE_STORAGE_ACCESS_KEY"
+export AZURE_STORAGE_KEY="$AZURE_STORAGE_KEY"
 
 export PGPASSWORD=$POSTGRES_PASSWORD
 POSTGRES_HOST_OPTS="-h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER $POSTGRES_EXTRA_OPTS"
@@ -68,20 +58,15 @@ echo "Creating dump of ${POSTGRES_DATABASE} database from ${POSTGRES_HOST}..."
 
 pg_dump $POSTGRES_HOST_OPTS $POSTGRES_DATABASE | gzip > dump.sql.gz
 
-echo "logging into Azure cloud account"
+echo "Create azure container $AZURE_CONTAINER_NAME"
 
-az login \
-  --service-principal \
-  --user $AZURE_APP_ID \
-  --password $AZURE_SECRET_ID \
-  --tenant $AZURE_TENANT_ID
+az storage container create --auth-mode key --name $AZURE_CONTAINER_NAME 
 
-echo "Uploading dump to $AZURE_STORAGE_CONTAINER"
-
-az storage container create --name $AZURE_STORAGE_CONTAINER
+echo "Uploading dump to $AZURE_CONTAINER_NAME"
 
 az storage blob upload \
-  --container-name $AZURE_STORAGE_CONTAINER \
+  --auth-mode key \
+  --container-name $AZURE_CONTAINER_NAME \
   --name ${POSTGRES_DATABASE}_$(date +"%Y-%m-%dT%H:%M:%SZ").sql.gz \
   --file dump.sql.gz
 

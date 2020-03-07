@@ -1,34 +1,23 @@
 #! /bin/bash
 
-set -eo pipefail
+# The script sholud immediately fail, explicitly and loudly.
+#
+set -euo pipefail
 
-if [ "${AZURE_TENANT_ID}" = "**None**" ]; then
-  echo "You need to set the AZURE_TENANT_ID environment variable."
-  exit 1
-fi
-
-if [ "${AZURE_APP_ID}" = "**None**" ]; then
-  echo "You need to set the AZURE_APP_ID environment variable."
-  exit 1
-fi
-
-if [ "${AZURE_SECRET_ID}" = "**None**" ]; then
-  echo "You need to set the AZURE_SECRET_ID environment variable."
-  exit 1
-fi
-
+# check all environment varibles are set
+#
 if [ "${AZURE_STORAGE_ACCOUNT}" = "**None**" ]; then
   echo "You need to set the AZURE_STORAGE_ACCOUNT environment variable."
   exit 1
 fi
 
-if [ "${AZURE_STORAGE_CONTAINER}" = "**None**" ]; then
-  echo "You need to set the AZURE_STORAGE_CONTAINER environment variable."
+if [ "${AZURE_STORAGE_KEY}" = "**None**" ]; then
+  echo "You need to set the AZURE_STORAGE_KEY environment variable."
   exit 1
 fi
 
-if [ "${AZURE_STORAGE_ACCESS_KEY}" = "**None**" ]; then
-  echo "You need to set the $AZURE_STORAGE_ACCESS_KEY environment variable."
+if [ "${AZURE_CONTAINER_NAME}" = "**None**" ]; then
+  echo "You need to set the AZURE_CONTAINER_NAME environment variable."
   exit 1
 fi
 
@@ -57,27 +46,21 @@ if [ "${POSTGRES_PASSWORD}" = "**None**" ]; then
   exit 1
 fi
 
-# export ENV vars for azstorage container
+
+# export vars for child processes
+#
 export AZURE_STORAGE_ACCOUNT="$AZURE_STORAGE_ACCOUNT"
-export AZURE_STORAGE_ACCESS_KEY="$AZURE_STORAGE_ACCESS_KEY"
+export AZURE_STORAGE_KEY="$AZURE_STORAGE_KEY"
 
 export PGPASSWORD=$POSTGRES_PASSWORD
 POSTGRES_HOST_OPTS="-h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER $POSTGRES_EXTRA_OPTS"
 
-echo "logging into Azure cloud account"
-
-az login \
-  --service-principal \
-  --user $AZURE_APP_ID \
-  --password $AZURE_SECRET_ID \
-  --tenant $AZURE_TENANT_ID
 
 if [ "${AZURE_BLOB_NAME}" = "**None**" ]; then
   echo "Finding latest backup"
   file=$(az storage blob list \
-    --container-name $AZURE_STORAGE_CONTAINER \
-    --query 'max_by([], &properties.lastModified)' -o tsv | cut -f3)
-
+    --container-name $AZURE_CONTAINER_NAME \
+    --query 'max_by([], &properties.lastModified)' -o tsv | cut -f4)
 else
   file=${AZURE_BLOB_NAME}
 fi
@@ -85,9 +68,10 @@ fi
 echo "Fetching ${file} from Azure"
 
 az storage blob download \
-    --container-name $AZURE_STORAGE_CONTAINER \
-    --name $file \
-    --file dump.sql.gz
+  --auth-mode key \
+  --container-name $AZURE_CONTAINER_NAME \
+  --name $file \
+  --file dump.sql.gz
 gzip -d dump.sql.gz
 
 if [ "${DROP_PUBLIC}" == "yes" ]; then
@@ -95,7 +79,7 @@ if [ "${DROP_PUBLIC}" == "yes" ]; then
 	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "drop schema public cascade; create schema public;"
 fi
 
-echo "Restoring ${LATEST_BACKUP}"
+echo "Restoring ${file} to ${POSTGRES_DATABASE}"
 
 psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE < dump.sql
 
