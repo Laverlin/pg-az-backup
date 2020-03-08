@@ -5,8 +5,7 @@ LABEL author="ilaverlin@gmail.com"
 RUN apk update && apk upgrade && \
     apk add bash make py-pip \
     --virtual=build gcc libffi-dev musl-dev openssl-dev python2-dev && \
-    pip install azure-cli && \
-    apk del --purge build
+    pip install azure-cli 
 
 ENV POSTGRES_HOST **None**
 ENV POSTGRES_PORT 5432
