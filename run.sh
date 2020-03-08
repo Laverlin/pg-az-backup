@@ -1,5 +1,4 @@
 #! /bin/sh
-
 set -euo pipefail
 
 if [ "${SCHEDULE}" = "**None**" ]; then
@@ -7,5 +6,7 @@ if [ "${SCHEDULE}" = "**None**" ]; then
     bash backup.sh
 else
     echo "schedule backup $SCHEDULE"
-    exec go-cron "$SCHEDULE" /bin/bash backup.sh
+    JOB="$SCHEDULE bash backup.sh > /proc/1/fd/1 2>/proc/1/fd/2"
+    echo "$JOB" > /etc/crontabs/root
+    crond -f -d 8 
 fi
