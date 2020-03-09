@@ -3,9 +3,10 @@ LABEL based-on="https://github.com/Elexy/postgres-docker-tools/tree/master/pg-ba
 LABEL author="ilaverlin@gmail.com"
 
 RUN apk update && apk upgrade && \
-    apk add bash make py-pip \
-    --virtual=build gcc libffi-dev musl-dev openssl-dev python2-dev && \
-    pip install azure-cli 
+    apk add --no-cache bash make py-pip && \
+    apk add --virtual=build gcc libffi-dev musl-dev openssl-dev python2-dev && \
+    pip install --no-cache-dir azure-cli && \
+    apk del --purge build
 
 ENV POSTGRES_HOST **None**
 ENV POSTGRES_PORT 5432
@@ -23,4 +24,4 @@ ENV SCHEDULE **None**
 
 COPY ["run.sh", "backup.sh", "restore.sh", "./"]
 
-CMD ["sh", "run.sh"]
+CMD ["bash", "run.sh"]
