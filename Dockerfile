@@ -3,9 +3,10 @@ LABEL based-on="https://github.com/Elexy/postgres-docker-tools/tree/master/pg-ba
 LABEL author="ilaverlin@gmail.com"
 
 RUN apk update && apk upgrade && \
-    apk add --no-cache bash make py-pip && \
-    apk add --virtual=build gcc libffi-dev musl-dev openssl-dev python2-dev && \
-    pip install --no-cache-dir azure-cli && \
+    apk add --no-cache bash python3 && \
+    apk add --virtual=build gcc libffi-dev musl-dev openssl-dev python3-dev make && \
+    pip3 --no-cache-dir install -U pip && \
+    pip3 --no-cache-dir install azure-cli && \
     apk del --purge build
 
 ENV POSTGRES_HOST **None**
