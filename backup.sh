@@ -11,8 +11,8 @@ if [ "${AZURE_STORAGE_ACCOUNT}" = "**None**" ]; then
   exit 1
 fi
 
-if [ "${AZURE_STORAGE_KEY}" = "**None**" ]; then
-  echo "You need to set the AZURE_STORAGE_KEY environment variable."
+if [ "${AZURE_SAS}" = "**None**" ]; then
+  echo "You need to set the AZURE_SAS environment variable."
   exit 1
 fi
 
@@ -42,14 +42,9 @@ if [ "${POSTGRES_USER}" = "**None**" ]; then
 fi
 
 if [ "${POSTGRES_PASSWORD}" = "**None**" ]; then
-  echo "You need to set the POSTGRES_PASSWORD environment variable or link to a container named POSTGRES."
+  echo "You need to set the POSTGRES_PASSWORD environment variable."
   exit 1
 fi
-
-# export vars for child processes
-#
-export AZURE_STORAGE_ACCOUNT="$AZURE_STORAGE_ACCOUNT"
-export AZURE_STORAGE_KEY="$AZURE_STORAGE_KEY"
 
 export PGPASSWORD=$POSTGRES_PASSWORD
 POSTGRES_HOST_OPTS="-h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER $POSTGRES_EXTRA_OPTS"
@@ -60,14 +55,17 @@ pg_dump $POSTGRES_HOST_OPTS $POSTGRES_DATABASE | gzip > dump.sql.gz
 
 echo "Create azure container $AZURE_CONTAINER_NAME"
 
-az storage container create --auth-mode key --name $AZURE_CONTAINER_NAME 
+curl -X PUT	\
+  -H "Content-Length: 0" \
+  "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_CONTAINER_NAME}${AZURE_SAS}&restype=container"
 
-echo "Uploading dump to $AZURE_CONTAINER_NAME"
+BACKUP_FILE=${POSTGRES_DATABASE}_$(date +"%Y-%m-%dT%H:%M:%SZ").sql.gz
 
-az storage blob upload \
-  --auth-mode key \
-  --container-name $AZURE_CONTAINER_NAME \
-  --name ${POSTGRES_DATABASE}_$(date +"%Y-%m-%dT%H:%M:%SZ").sql.gz \
-  --file dump.sql.gz
+echo "Uploading dump ${BACKUP_FILE} to $AZURE_CONTAINER_NAME"
+
+curl -X PUT -T "dump.sql.gz" \
+    -H "x-ms-date: $(date -u)" \
+    -H "x-ms-blob-type: BlockBlob" \
+    "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_CONTAINER_NAME}/${BACKUP_FILE}${AZURE_SAS}"
 
 echo "SQL backup uploaded successfully"
