@@ -1,9 +1,10 @@
-FROM postgres:alpine
+FROM alpine:latest
 LABEL author="ilaverlin@gmail.com"
 LABEL inspired-by="https://github.com/Elexy/postgres-docker-tools, Alex Knol <alexknol@gmail.com>"
 
 
 RUN apk update && apk upgrade && \
+    apk add --no-cache postgresql-client && \
     apk add --no-cache curl
 
 ENV POSTGRES_HOST **None**
@@ -20,6 +21,8 @@ ENV AZURE_BLOB_NAME **None**
 
 ENV SCHEDULE **None**
 
+ENV LAST_BACKUP_MARKER last-backup-name
+
 COPY ["run.sh", "backup.sh", "restore.sh", "./"]
 
-CMD ["bash", "run.sh"]
+CMD ["sh", "run.sh"]

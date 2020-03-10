@@ -59,13 +59,23 @@ curl -X PUT	\
   -H "Content-Length: 0" \
   "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_CONTAINER_NAME}${AZURE_SAS}&restype=container"
 
-BACKUP_FILE=${POSTGRES_DATABASE}_$(date +"%Y-%m-%dT%H:%M:%SZ").sql.gz
+BACKUP_NAME="${POSTGRES_DATABASE}_$(date +"%Y-%m-%dT%H:%M:%SZ").sql.gz"
 
-echo "Uploading dump ${BACKUP_FILE} to $AZURE_CONTAINER_NAME"
+# store the last backup file name into marker file 
+# (as a workaround since az rest api is unable to filter blobs to find the last updated)
+#
+echo "${BACKUP_NAME}" > ${LAST_BACKUP_MARKER}
+
+echo "Uploading dump ${BACKUP_NAME} to $AZURE_CONTAINER_NAME"
 
 curl -X PUT -T "dump.sql.gz" \
     -H "x-ms-date: $(date -u)" \
     -H "x-ms-blob-type: BlockBlob" \
-    "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_CONTAINER_NAME}/${BACKUP_FILE}${AZURE_SAS}"
+    "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_CONTAINER_NAME}/${BACKUP_NAME}${AZURE_SAS}"
+
+curl -X PUT -T ${LAST_BACKUP_MARKER} \
+    -H "x-ms-date: $(date -u)" \
+    -H "x-ms-blob-type: BlockBlob" \
+    "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_CONTAINER_NAME}/${LAST_BACKUP_MARKER}${AZURE_SAS}"
 
 echo "SQL backup uploaded successfully"
