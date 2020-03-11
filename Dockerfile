@@ -20,9 +20,10 @@ ENV AZURE_CONTAINER_NAME **None**
 ENV AZURE_BLOB_NAME **None**
 
 ENV SCHEDULE **None**
+ENV RESTORE **None**
 
 ENV LAST_BACKUP_MARKER last-backup-name
 
-COPY ["run.sh", "backup.sh", "restore.sh", "./"]
+COPY ["run.sh", "backup.sh", "restore.sh", "process-vars.sh", "./"]
 
 CMD ["sh", "run.sh"]
