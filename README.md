@@ -1,6 +1,6 @@
 # PG-AZ-Backup
 
-[![Build Status](https://img.shields.io/docker/cloud/build/ilaverlin/pg-backup)](https://hub.docker.com/repository/docker/ilaverlin/pg-backup)   ![Image Size](https://img.shields.io/docker/image-size/ilaverlin/pg-backup/latest)
+[![Build Status](https://img.shields.io/docker/cloud/build/ilaverlin/pg-az-backup)](https://hub.docker.com/repository/docker/ilaverlin/pg-backup)   ![Image Size](https://img.shields.io/docker/image-size/ilaverlin/pg-az-backup/latest)
 
 The tool in the form of a Docker container to easily backup specified Postgres database to Azure BLOB storage and restore that database from the BLOB. Periodic backup is also supported.
 
