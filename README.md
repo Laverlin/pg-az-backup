@@ -16,9 +16,9 @@ docker run \
     -e POSTGRES_DATABASE=<database name> \
     -e AZURE_STORAGE_ACCOUNT=<storage account name> \
     -e AZURE_SAS=<azure SAS token> \
-    -e AZURE_STORAGE_CONTAINER=<azure storage container> \
+    -e AZURE_CONTAINER_NAME=<azure storage container> \
     --rm \
-    ilaverlin/bg-az-backup
+    ilaverlin/pg-az-backup
 ```
 Also, you may pass additional backup parameters by setting an environment variable `POSTGRES_EXTRA_OPTS`. 
 
@@ -33,10 +33,10 @@ docker run \
     -e POSTGRES_DATABASE=<database name> \
     -e AZURE_STORAGE_ACCOUNT=<storage account name> \
     -e AZURE_SAS=<azure SAS token> \
-    -e AZURE_STORAGE_CONTAINER=<azure storage container> \
+    -e AZURE_CONTAINER_NAME=<azure storage container> \
     -e SCHEDULE=<cron schedule> \
     -d --name pg-scheduled-backup \
-    ilaverlin/bg-az-backup
+    ilaverlin/pg-az-backup
 ```
 #### Restore database
 To restore database you'll need to set environment variable `RESTORE` to 'yes' e. g. `-e RESTORE="yes"`. If the target database contains data, you might want to specify `DROP_PUBLIC="yes"`, that will drop the public schema. In case of an empty target database you can omit this variable.
@@ -49,9 +49,9 @@ docker run \
     -e POSTGRES_DATABASE=<database name> \
     -e AZURE_STORAGE_ACCOUNT=<storage account name> \
     -e AZURE_SAS=<azure SAS token> \
-    -e AZURE_STORAGE_CONTAINER=<azure storage container> \
+    -e AZURE_CONTAINER_NAME=<azure storage container> \
     -e RESTORE=yes \
     -e DROP_PUBLIC=yes \
     --rm \
-    ilaverlin/bg-az-backup
+    ilaverlin/pg-az-backup
 ```
