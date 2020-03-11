@@ -23,7 +23,7 @@ docker run \
 Also, you may pass additional backup parameters by setting an environment variable `POSTGRES_EXTRA_OPTS`. 
 
 #### Automatic periodic backup
-To schedule a periodic backup you'll need to pass `SCHEDULE` environment variable that should contain cron job schedule syntax, e. g. `-e SCHEDULE="@daily"` or `-e SCHEDULE = "0 0 * * 0"` (weekly).
+To schedule a periodic backup you'll need to pass `SCHEDULE` environment variable that should contain cron job schedule syntax, e. g. `-e SCHEDULE="@daily"` or `-e SCHEDULE = "0 0 * * 0"` (weekly).<br/>
 Do not forget to add `-d` switch to **docker run** command to keep the container running. 
 ```
 docker run \
@@ -39,8 +39,9 @@ docker run \
     ilaverlin/pg-az-backup
 ```
 #### Restore database
-To restore database you'll need to set environment variable `RESTORE` to 'yes' e. g. `-e RESTORE="yes"`. If the target database contains data, you might want to specify `DROP_PUBLIC="yes"`, that will drop the public schema. In case of an empty target database you can omit this variable.
-By default the last backup will be restored. If you need to restore specified backup you can set AZURE_BLOB_NAME environment variable with backp file name e.g. `-e AZURE_BLOB_NAME="<database name>_2020-03-11T14:08:28Z.sql.gz"`.
+To restore database you'll need to set environment variable `RESTORE` to 'yes' e. g. `-e RESTORE="yes"`. <br/>
+If the target database contains data, you might want to specify `DROP_PUBLIC="yes"`, that will drop the public schema. In case of an empty target database you can omit this variable.<br/>
+By default the last backup will be restored. If you need to restore specified backup you can set `AZURE_BLOB_NAME` environment variable with backp file name e.g. `-e AZURE_BLOB_NAME="<database name>_2020-03-11T14:08:28Z.sql.gz"`.
 ```
 docker run \
     -e POSTGRES_HOST=<postgres hostname> \
