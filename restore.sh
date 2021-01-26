@@ -31,7 +31,7 @@ fi
 
 if [ "${DROP_PUBLIC}" == "create" ]; then
 	echo "Creating the new database"
-	psql $POSTGRES_HOST_OPTS -c "create database $POSTGRES_DATABASE;"
+	psql $POSTGRES_HOST_OPTS -c "create database \"$POSTGRES_DATABASE\";"
 fi
 
 echo "Restoring '${backup_file}' to '${POSTGRES_DATABASE}'"
