@@ -29,6 +29,11 @@ if [ "${DROP_PUBLIC}" == "yes" ]; then
 	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "drop schema public cascade; create schema public;"
 fi
 
+if [ "${DROP_PUBLIC}" == "create" ]; then
+	echo "Creating the new database"
+	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "create database $POSTGRES_DATABASE;"
+fi
+
 echo "Restoring '${backup_file}' to '${POSTGRES_DATABASE}'"
 
 psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE < dump.sql
