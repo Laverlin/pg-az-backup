@@ -17,7 +17,8 @@ curl -X PUT \
   -w ": %{http_code}\n" \
   -s -o /dev/null # we no need a progress bar and an error response if the container does exist already
 
-BACKUP_NAME="${POSTGRES_DATABASE}_$(date +"%Y-%m-%dT%H:%M:%SZ").sql.gz"
+#BACKUP_NAME="${POSTGRES_DATABASE}_$(date +"%Y-%m-%dT%H:%M:%SZ").sql.gz"
+BACKUP_NAME="dump.sql.gz"
 
 # store the last backup file name into marker file 
 # (as a workaround since az rest api is unable to filter blobs to find the last updated, we should remember it somewhere)
@@ -29,7 +30,10 @@ echo "Uploading dump '${BACKUP_NAME}' to '${AZURE_CONTAINER_NAME}'"
 curl -X PUT -T "dump.sql.gz" \
     -H "x-ms-date: $(date -u)" \
     -H "x-ms-blob-type: BlockBlob" \
+    -H "Content-Length: 0" \
     "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_CONTAINER_NAME}/${BACKUP_NAME}${AZURE_SAS}"
+
+/bin/sh upload.sh ${AZURE_STORAGE_ACCOUNT} ${AZURE_SAS} ${BACKUP_NAME} ${AZURE_CONTAINER_NAME}
 
 curl -X PUT -T ${LAST_BACKUP_MARKER} -s \
     -H "x-ms-date: $(date -u)" \

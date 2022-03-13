@@ -24,6 +24,6 @@ ENV RESTORE **None**
 
 ENV LAST_BACKUP_MARKER last-backup-name
 
-COPY ["run.sh", "backup.sh", "restore.sh", "process-vars.sh", "./"]
+COPY ["run.sh", "backup.sh", "upload.sh", "restore.sh", "process-vars.sh", "./"]
 
 CMD ["sh", "run.sh"]
