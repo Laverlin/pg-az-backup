@@ -22,10 +22,10 @@ else
     echo "==========================="
 
     # Create the file object
-    curl -X PUT -H "x-ms-content-md5: $FILEMD5" -H "Content-Length: 0" -H "x-ms-date: $FILEDATE"  -H "x-ms-version: $RESTAPIVERSION" -H "x-ms-content-length: $FILESIZE" -H "x-ms-type: file" "https://$STORAGEACCOUNT.file.core.windows.net/$FILESHARE/$FILENAME?$SASTOKEN"
+    curl -X PUT -H "x-ms-content-md5: $FILEMD5" -H "Content-Length: 0" -H "x-ms-date: $FILEDATE"  -H "x-ms-version: $RESTAPIVERSION" -H "x-ms-content-length: $FILESIZE" -H "x-ms-type: file" "https://$STORAGEACCOUNT.file.core.windows.net/$FILESHARE/$FILENAME$SASTOKEN"
 
     #  We need to break the file into seperate parts if FileSize > 4MB
-    split -b 4m --numeric-suffixes --suffix-length=10 $FILENAME part
+    split -b 4m -a 10 $FILENAME part
 
     # Upload each part of the file by performing multiple Put Range operations 
     FILEPOINTER=0
