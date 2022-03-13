@@ -5,6 +5,7 @@ LABEL inspired-by="https://github.com/Elexy/postgres-docker-tools, Alex Knol <al
 
 RUN apk update && apk upgrade && \
     apk add --no-cache postgresql-client && \
+    apk add --no-cache openssl && \
     apk add --no-cache curl
 
 ENV POSTGRES_HOST **None**
