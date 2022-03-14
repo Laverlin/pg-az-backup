@@ -49,7 +49,7 @@ else
         XML="${XML}<Uncommitted>${ENCODED_I}</Uncommitted>"
 
         # curl -T ./{$PARTNAME} -H "Content-MD5: $PARTMD5" -H "x-ms-write: update" -H "x-ms-date: $PARTDATE"  -H "x-ms-version: $RESTAPIVERSION" -H "x-ms-range: $FILERANGE" -H "Content-Type: application/octet-stream" "https://$STORAGEACCOUNT.file.core.windows.net/$FILESHARE/$FILENAME$SASTOKEN&comp=range"
-        curl -X PUT -T ./{$PARTNAME} -H "Content-Type: application/octet-stream" -H "x-ms-date: ${PARTDATE}" -H "x-ms-version: ${RESTAPIVERSION}" -H "x-ms-blob-type: BlockBlob" "https://${STORAGEACCOUNT}.blob.core.windows.net/${FILESHARE}/${FILENAME}${SASTOKEN}${BLOCK_ID_STRING}"
+        curl -X PUT -T ./{$PARTNAME} -H "x-ms-date: ${PARTDATE}" -H "x-ms-version: ${RESTAPIVERSION}" -H "x-ms-blob-type: BlockBlob" "https://${STORAGEACCOUNT}.blob.core.windows.net/${FILESHARE}/${FILENAME}${SASTOKEN}${BLOCK_ID_STRING}"
         FILEPOINTER=$(($FILEPOINTER + $PARTSIZE))
         echo "Next Filepointer: $FILEPOINTER"
         echo "--------------------------"
