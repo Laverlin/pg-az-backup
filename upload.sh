@@ -44,7 +44,7 @@ else
         echo "FileRange: $FILERANGE"
         echo "Current Filepointer: $FILEPOINTER"
 
-        ENCODED_I="$(openssl enc -base64 <<< ${PARTNAME})"
+        ENCODED_I="$(echo ${PARTNAME} | openssl enc -base64)"
         BLOCK_ID_STRING="&comp=block&blockid=${ENCODED_I}"
         XML="${XML}<Uncommitted>${ENCODED_I}</Uncommitted>"
 
