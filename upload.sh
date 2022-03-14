@@ -22,10 +22,17 @@ else
     echo "==========================="
 
     # Create the file object
-    curl -X PUT -H "x-ms-content-md5: $FILEMD5" -H "Content-Length: 0" -H "x-ms-date: $FILEDATE"  -H "x-ms-version: $RESTAPIVERSION" -H "x-ms-content-length: $FILESIZE" -H "x-ms-type: file" "https://$STORAGEACCOUNT.file.core.windows.net/$FILESHARE/$FILENAME$SASTOKEN"
+    curl -X PUT \ 
+        -H "x-ms-content-md5: $FILEMD5" \
+        -H "Content-Length: 0" \
+        -H "x-ms-date: $FILEDATE"  \
+        -H "x-ms-version: $RESTAPIVERSION" \
+        -H "x-ms-content-length: $FILESIZE" \
+        -H "x-ms-type: file" \
+        "https://$STORAGEACCOUNT.blob.core.windows.net/$FILESHARE/$FILENAME$SASTOKEN"
 
     #  We need to break the file into seperate parts if FileSize > 4MB
-    split -b 4m -a 10 $FILENAME part
+    split -b 50m -a 10 $FILENAME part
 
     # Upload each part of the file by performing multiple Put Range operations 
     FILEPOINTER=0
@@ -42,7 +49,14 @@ else
         echo "PartDate: $PARTDATE"
         echo "FileRange: $FILERANGE"
         echo "Current Filepointer: $FILEPOINTER"
-        curl -T ./{$PARTNAME} -H "Content-MD5: $PARTMD5" -H "x-ms-write: update" -H "x-ms-date: $PARTDATE"  -H "x-ms-version: $RESTAPIVERSION" -H "x-ms-range: $FILERANGE" -H "Content-Type: application/octet-stream" "https://$STORAGEACCOUNT.file.core.windows.net/$FILESHARE/$FILENAME?comp=range&$SASTOKEN"
+        curl -T ./{$PARTNAME} \ 
+            -H "Content-MD5: $PARTMD5" \
+            -H "x-ms-write: update" \
+            -H "x-ms-date: $PARTDATE"  \
+            -H "x-ms-version: $RESTAPIVERSION" \
+            -H "x-ms-range: $FILERANGE" \
+            -H "Content-Type: application/octet-stream" \
+            "https://$STORAGEACCOUNT.blob.core.windows.net/$FILESHARE/$FILENAME$SASTOKEN&comp=range"
         FILEPOINTER=$(($FILEPOINTER + $PARTSIZE))
         echo "Next Filepointer: $FILEPOINTER"
         echo "--------------------------"
