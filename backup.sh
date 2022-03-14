@@ -27,11 +27,11 @@ printf "${BACKUP_NAME}" > ${LAST_BACKUP_MARKER}
 
 echo "Uploading dump '${BACKUP_NAME}' to '${AZURE_CONTAINER_NAME}'"
 
-curl -X PUT -T "dump.sql.gz" \
-    -H "x-ms-date: $(date -u)" \
-    -H "x-ms-blob-type: BlockBlob" \
-    -H "Content-Length: 0" \
-    "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_CONTAINER_NAME}/${BACKUP_NAME}${AZURE_SAS}"
+#curl -X PUT -T "dump.sql.gz" \
+#    -H "x-ms-date: $(date -u)" \
+#    -H "x-ms-blob-type: BlockBlob" \
+#    -H "Content-Length: 0" \
+#    "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_CONTAINER_NAME}/${BACKUP_NAME}${AZURE_SAS}"
 
 /bin/sh upload.sh ${AZURE_STORAGE_ACCOUNT} ${AZURE_SAS} ${BACKUP_NAME} ${AZURE_CONTAINER_NAME}
 
