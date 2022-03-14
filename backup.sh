@@ -17,8 +17,8 @@ curl -X PUT \
   -w ": %{http_code}\n" \
   -s -o /dev/null # we no need a progress bar and an error response if the container does exist already
 
-#BACKUP_NAME="${POSTGRES_DATABASE}_$(date +"%Y-%m-%dT%H:%M:%SZ").sql.gz"
-BACKUP_NAME="dump.sql.gz"
+BACKUP_NAME="${POSTGRES_DATABASE}_$(date +"%Y-%m-%dT%H:%M:%SZ").sql.gz"
+#BACKUP_NAME="dump.sql.gz"
 
 # store the last backup file name into marker file 
 # (as a workaround since az rest api is unable to filter blobs to find the last updated, we should remember it somewhere)
