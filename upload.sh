@@ -22,8 +22,7 @@ else
     echo "==========================="
 
     # Create the file object
-    curl -X PUT \ 
-        -H "x-ms-content-md5: $FILEMD5" \
+    curl -X PUT -H "x-ms-content-md5: $FILEMD5" \
         -H "Content-Length: 0" \
         -H "x-ms-date: $FILEDATE"  \
         -H "x-ms-version: $RESTAPIVERSION" \
@@ -49,8 +48,7 @@ else
         echo "PartDate: $PARTDATE"
         echo "FileRange: $FILERANGE"
         echo "Current Filepointer: $FILEPOINTER"
-        curl -T ./{$PARTNAME} \ 
-            -H "Content-MD5: $PARTMD5" \
+        curl -T ./{$PARTNAME} -H "Content-MD5: $PARTMD5" \
             -H "x-ms-write: update" \
             -H "x-ms-date: $PARTDATE"  \
             -H "x-ms-version: $RESTAPIVERSION" \
