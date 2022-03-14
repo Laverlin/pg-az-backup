@@ -7,7 +7,7 @@ else
     STORAGEACCOUNT="$1"
     SASTOKEN="$2"
     FILENAME="$3"
-    FILESHARE="$4"
+    FILESHARE="cs-i6162746-hotmail-com-100300009e2d2cd6"
     FILESIZE=$(stat -c%s "$FILENAME")
     FILEMD5=$(cat $FILENAME | openssl dgst -md5 -binary | openssl enc -base64)
     FILEDATE=$(date -u)
