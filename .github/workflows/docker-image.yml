@@ -25,4 +25,4 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: ilaverlin/pg-az-backup:$(date +%s)   
+        tags: ilaverlin/pg-az-backup:latest   
