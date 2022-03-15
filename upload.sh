@@ -8,8 +8,8 @@ else
     SASTOKEN="$2"
     FILENAME="$3"
     FILESHARE="$4"
-    FILESIZE=$(stat -c%s "$FILENAME")
-    FILEMD5=$(cat $FILENAME | openssl dgst -md5 -binary | openssl enc -base64)
+    FILESIZE=$(stat -c%s "dump.sql.gz")
+    FILEMD5=$(cat dump.sql.gz | openssl dgst -md5 -binary | openssl enc -base64)
     FILEDATE=$(date -u)
     RESTAPIVERSION=2018-11-09
 
@@ -25,7 +25,7 @@ else
     # curl -X PUT -H "x-ms-content-md5: $FILEMD5" -H "Content-Length: 0" -H "x-ms-date: $FILEDATE" -H "x-ms-version: $RESTAPIVERSION" -H "x-ms-content-length: $FILESIZE" -H "x-ms-type: file" "https://$STORAGEACCOUNT.blob.core.windows.net/$FILESHARE/$FILENAME$SASTOKEN"
 
     #  We need to break the file into seperate parts if FileSize > 4MB
-    split -b 100m -a 10 $FILENAME part
+    split -b 100m -a 10 "dump.sql.gz" part
 
     XML='<?xml version="1.0" encoding="utf-8"?><BlockList>'
     # Upload each part of the file by performing multiple Put Range operations 
