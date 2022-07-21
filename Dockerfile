@@ -25,6 +25,8 @@ ENV RESTORE **None**
 
 ENV LAST_BACKUP_MARKER last-backup-name
 
+RUN mkdir /app
+
 COPY ["run.sh", "backup.sh", "upload.sh", "restore.sh", "process-vars.sh", "/app"]
 
 CMD ["sh", "/app/run.sh"]
