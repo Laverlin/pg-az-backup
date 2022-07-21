@@ -4,6 +4,11 @@
 #
 set -euo pipefail
 
+echo "set working dir"
+
+mkdir -p /etc/data
+cd /etc/data
+
 echo $(date +"%Y-%m-%d %H:%M:%S")
 echo "Creating dump of '${POSTGRES_DATABASE}' database from '${POSTGRES_HOST}'..."
 
