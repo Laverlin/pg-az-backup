@@ -6,7 +6,7 @@ set -euo pipefail
 
 # check and prepare environment variables
 #
-. /process-vars.sh
+. /app/process-vars.sh
 
 if [ "${SCHEDULE}" = "**None**" ]; then
     if [ "${RESTORE}" = "yes" ]; then
