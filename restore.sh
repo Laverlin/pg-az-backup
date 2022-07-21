@@ -4,6 +4,9 @@
 #
 set -euo pipefail
 
+mkdir -p /etc/data
+cd /etc/data
+
 # attempt to define backup file name
 #
 if [ "${AZURE_BLOB_NAME}" = "**None**" ]; then

@@ -38,7 +38,7 @@ echo "Uploading dump '${BACKUP_NAME}' to '${AZURE_CONTAINER_NAME}'"
 #    -H "Content-Length: 0" \
 #    "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/${AZURE_CONTAINER_NAME}/${BACKUP_NAME}${AZURE_SAS}"
 
-/bin/sh ./upload.sh ${AZURE_STORAGE_ACCOUNT} ${AZURE_SAS} ${BACKUP_NAME} ${AZURE_CONTAINER_NAME}
+/bin/sh /app/upload.sh ${AZURE_STORAGE_ACCOUNT} ${AZURE_SAS} ${BACKUP_NAME} ${AZURE_CONTAINER_NAME}
 
 curl -X PUT -T ${LAST_BACKUP_MARKER} -s \
     -H "x-ms-date: $(date -u)" \
