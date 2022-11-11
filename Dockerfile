@@ -1,13 +1,13 @@
-FROM ubuntu:latest
+FROM postgres:15-alpine
 LABEL author="ilaverlin@gmail.com"
 LABEL inspired-by="https://github.com/Elexy/postgres-docker-tools, Alex Knol <alexknol@gmail.com>"
 
-# RUN apk update && apk upgrade && \
+RUN apk update && apk upgrade && \
+    apk add --no-cache openssl && \
+    apk add --no-cache curl
 #     apk add --no-cache postgresql-client && \
-#     apk add --no-cache openssl && \
-#     apk add --no-cache curl
 
-RUN apt-get update && apt install -y postgresql-client-15 curl
+# RUN apt-get update && apt install -y postgresql curl
 
 ENV POSTGRES_HOST **None**
 ENV POSTGRES_PORT 5432
@@ -30,4 +30,4 @@ RUN mkdir /app
 
 COPY ["run.sh", "backup.sh", "upload.sh", "restore.sh", "process-vars.sh", "/app"]
 
-CMD ["bash", "/app/run.sh"]
+CMD ["sh", "/app/run.sh"]
