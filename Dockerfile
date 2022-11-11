@@ -1,11 +1,13 @@
-FROM alpine:latest
+FROM ubuntu:latest
 LABEL author="ilaverlin@gmail.com"
 LABEL inspired-by="https://github.com/Elexy/postgres-docker-tools, Alex Knol <alexknol@gmail.com>"
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache postgresql-client-15 && \
-    apk add --no-cache openssl && \
-    apk add --no-cache curl
+# RUN apk update && apk upgrade && \
+#     apk add --no-cache postgresql-client && \
+#     apk add --no-cache openssl && \
+#     apk add --no-cache curl
+
+RUN apt-get update && apt install -y postgresql-client openssl curl
 
 ENV POSTGRES_HOST **None**
 ENV POSTGRES_PORT 5432
