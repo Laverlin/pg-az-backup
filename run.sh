@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 # The script sholud immediately fail, explicitly and loudly.
 #
@@ -11,14 +11,14 @@ set -euo pipefail
 if [ "${SCHEDULE}" = "**None**" ]; then
     if [ "${RESTORE}" = "yes" ]; then
         echo "run restore"
-        /bin/sh /app/restore.sh
+        /bin/bash /app/restore.sh
     else
         echo "run backup"
-        /bin/sh /app/backup.sh
+        /bin/bash /app/backup.sh
     fi
 else
     echo "schedule backup $SCHEDULE"
-    JOB="$SCHEDULE /bin/sh /app/backup.sh > /proc/1/fd/1 2>/proc/1/fd/2"
+    JOB="$SCHEDULE /bin/bash /app/backup.sh > /proc/1/fd/1 2>/proc/1/fd/2"
     echo "$JOB" > /etc/crontabs/root
     crond -f -d 8 
 fi

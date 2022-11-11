@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 # The script sholud immediately fail, explicitly and loudly.
 #

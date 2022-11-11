@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]
 then
    echo "Arguments required: $0 [STORAGEACCOUNT] [SASTOKEN] [FILENAME] [FILESHARE]";

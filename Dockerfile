@@ -30,4 +30,4 @@ RUN mkdir /app
 
 COPY ["run.sh", "backup.sh", "upload.sh", "restore.sh", "process-vars.sh", "/app"]
 
-CMD ["sh", "/app/run.sh"]
+CMD ["bash", "/app/run.sh"]
