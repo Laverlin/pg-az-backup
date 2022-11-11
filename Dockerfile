@@ -2,7 +2,6 @@ FROM alpine:latest
 LABEL author="ilaverlin@gmail.com"
 LABEL inspired-by="https://github.com/Elexy/postgres-docker-tools, Alex Knol <alexknol@gmail.com>"
 
-
 RUN apk update && apk upgrade && \
     apk add --no-cache postgresql-client && \
     apk add --no-cache openssl && \
