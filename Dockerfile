@@ -7,7 +7,7 @@ LABEL inspired-by="https://github.com/Elexy/postgres-docker-tools, Alex Knol <al
 #     apk add --no-cache openssl && \
 #     apk add --no-cache curl
 
-RUN apt-get update && apt install -y postgresql-client openssl curl
+RUN apt-get update && apt install -y postgresql-client-15 curl
 
 ENV POSTGRES_HOST **None**
 ENV POSTGRES_PORT 5432
